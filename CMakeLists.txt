@@ -178,106 +178,106 @@ endif (SQLITECPP_INTERNAL_SQLITE)
 
 # Optional additional targets:
 
-option(SQLITECPP_RUN_CPPLINT "Run cpplint.py tool for Google C++ StyleGuide." ON)
-if (SQLITECPP_RUN_CPPLINT)
-    find_package(PythonInterp)
-    if (PYTHONINTERP_FOUND)
-        # add a cpplint target to the "all" target
-        add_custom_target(SQLiteCpp_cpplint
-         ALL
-         COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/cpplint.py ${CPPLINT_ARG_OUTPUT} ${CPPLINT_ARG_VERBOSE} ${CPPLINT_ARG_LINELENGTH} ${SQLITECPP_SRC} ${SQLITECPP_INC}
-        )
-    endif (PYTHONINTERP_FOUND)
-else (SQLITECPP_RUN_CPPLINT)
-    message(STATUS "SQLITECPP_RUN_CPPLINT OFF")
-endif (SQLITECPP_RUN_CPPLINT)
-
-option(SQLITECPP_RUN_CPPCHECK "Run cppcheck C++ static analysis tool." ON)
-if (SQLITECPP_RUN_CPPCHECK)
-    find_program(CPPCHECK_EXECUTABLE NAMES cppcheck)
-    if (CPPCHECK_EXECUTABLE)
-        # add a cppcheck target to the "all" target
-        add_custom_target(SQLiteCpp_cppcheck
-         ALL
-         COMMAND ${CPPCHECK_EXECUTABLE} -j 8 cppcheck --enable=style --quiet ${CPPCHECK_ARG_TEMPLATE} ${PROJECT_SOURCE_DIR}/src
-        )
-        execute_process(COMMAND "${CPPCHECK_EXECUTABLE}" --version OUTPUT_VARIABLE CPPCHECK_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
-        message(STATUS "Found Cppcheck: ${CPPCHECK_EXECUTABLE} ${CPPCHECK_VERSION}")
-    else (CPPCHECK_EXECUTABLE)
-        message(STATUS "Could NOT find cppcheck")
-    endif (CPPCHECK_EXECUTABLE)
-else (SQLITECPP_RUN_CPPCHECK)
-    message(STATUS "SQLITECPP_RUN_CPPCHECK OFF")
-endif (SQLITECPP_RUN_CPPCHECK)
-
-option(SQLITECPP_RUN_DOXYGEN "Run Doxygen C++ documentation tool." OFF)
-if (SQLITECPP_RUN_DOXYGEN)
-    find_package(Doxygen)
-    if (DOXYGEN_FOUND)
-        # add a Doxygen target to the "all" target
-        add_custom_target(SQLiteCpp_doxygen
-         ALL
-         COMMAND doxygen Doxyfile > ${DEV_NULL}
-         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-        )
-    endif (DOXYGEN_FOUND)
-else (SQLITECPP_RUN_DOXYGEN)
-    message(STATUS "SQLITECPP_RUN_DOXYGEN OFF")
-endif (SQLITECPP_RUN_DOXYGEN)
-
-option(SQLITECPP_BUILD_EXAMPLES "Build examples." OFF)
-if (SQLITECPP_BUILD_EXAMPLES)
-    # add the basic example executable
-    add_executable(SQLiteCpp_example1 ${SQLITECPP_EXAMPLES})
-    target_link_libraries(SQLiteCpp_example1 SQLiteCpp sqlite3)
-    # Link target with pthread and dl for linux
-    if (UNIX)
-        target_link_libraries(SQLiteCpp_example1 pthread)
-        if (NOT APPLE)
-            target_link_libraries(SQLiteCpp_example1 dl)
-        endif ()
-    elseif (MSYS OR MINGW)
-        target_link_libraries(SQLiteCpp_example1 ssp)
-    endif ()
-else (SQLITECPP_BUILD_EXAMPLES)
-    message(STATUS "SQLITECPP_BUILD_EXAMPLES OFF")
-endif (SQLITECPP_BUILD_EXAMPLES)
-
-option(SQLITECPP_BUILD_TESTS "Build and run tests." OFF)
-if (SQLITECPP_BUILD_TESTS)
-    # deactivate some warnings for compiling the gtest library
-    if (NOT MSVC)
-        add_compile_options(-Wno-variadic-macros -Wno-long-long -Wno-switch-enum -Wno-float-equal -Wno-conversion-null -Wno-switch-default -Wno-pedantic)
-    endif (NOT MSVC)
-
-    # add the subdirectory containing the CMakeLists.txt for the gtest library
-    # TODO: under Linux, uses libgtest-dev if found
-    # TODO: move to the new googletest Github repository
-    if (NOT EXISTS "${PROJECT_SOURCE_DIR}/googletest/CMakeLists.txt")
-        message(FATAL_ERROR "Missing 'googletest' submodule! Either use 'git init submodule' and 'git update submodule' to get googletest according to the README, or deactivate unit tests with -DSQLITECPP_BUILD_TESTS=OFF")
-    endif ()
-    add_subdirectory(googletest)
-    include_directories("${PROJECT_SOURCE_DIR}/googletest/googletest/include")
-
-    # add the unit test executable
-    add_executable(SQLiteCpp_tests ${SQLITECPP_TESTS})
-    target_link_libraries(SQLiteCpp_tests gtest_main SQLiteCpp sqlite3)
-    # Link target with dl for linux
-    if (UNIX AND NOT APPLE)
-        target_link_libraries(SQLiteCpp_tests dl)
-    endif ()
-
-    # add a "test" target:
-    enable_testing()
-
-    # does the tests pass?
-    add_test(UnitTests SQLiteCpp_tests)
-
-    if (SQLITECPP_BUILD_EXAMPLES)
-        # does the example1 runs successfully?
-        add_test(Example1Run SQLiteCpp_example1)
-    endif (SQLITECPP_BUILD_EXAMPLES)
-else (SQLITECPP_BUILD_TESTS)
-    message(STATUS "SQLITECPP_BUILD_TESTS OFF")
-endif (SQLITECPP_BUILD_TESTS)
+#option(SQLITECPP_RUN_CPPLINT "Run cpplint.py tool for Google C++ StyleGuide." ON)
+#if (SQLITECPP_RUN_CPPLINT)
+#    find_package(PythonInterp)
+#    if (PYTHONINTERP_FOUND)
+#        # add a cpplint target to the "all" target
+#        add_custom_target(SQLiteCpp_cpplint
+#         ALL
+#         COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/cpplint.py ${CPPLINT_ARG_OUTPUT} ${CPPLINT_ARG_VERBOSE} ${CPPLINT_ARG_LINELENGTH} ${SQLITECPP_SRC} ${SQLITECPP_INC}
+#        )
+#    endif (PYTHONINTERP_FOUND)
+#else (SQLITECPP_RUN_CPPLINT)
+#    message(STATUS "SQLITECPP_RUN_CPPLINT OFF")
+#endif (SQLITECPP_RUN_CPPLINT)
+#
+#option(SQLITECPP_RUN_CPPCHECK "Run cppcheck C++ static analysis tool." ON)
+#if (SQLITECPP_RUN_CPPCHECK)
+#    find_program(CPPCHECK_EXECUTABLE NAMES cppcheck)
+#    if (CPPCHECK_EXECUTABLE)
+#        # add a cppcheck target to the "all" target
+#        add_custom_target(SQLiteCpp_cppcheck
+#         ALL
+#         COMMAND ${CPPCHECK_EXECUTABLE} -j 8 cppcheck --enable=style --quiet ${CPPCHECK_ARG_TEMPLATE} ${PROJECT_SOURCE_DIR}/src
+#        )
+#        execute_process(COMMAND "${CPPCHECK_EXECUTABLE}" --version OUTPUT_VARIABLE CPPCHECK_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
+#        message(STATUS "Found Cppcheck: ${CPPCHECK_EXECUTABLE} ${CPPCHECK_VERSION}")
+#    else (CPPCHECK_EXECUTABLE)
+#        message(STATUS "Could NOT find cppcheck")
+#    endif (CPPCHECK_EXECUTABLE)
+#else (SQLITECPP_RUN_CPPCHECK)
+#    message(STATUS "SQLITECPP_RUN_CPPCHECK OFF")
+#endif (SQLITECPP_RUN_CPPCHECK)
+#
+#option(SQLITECPP_RUN_DOXYGEN "Run Doxygen C++ documentation tool." OFF)
+#if (SQLITECPP_RUN_DOXYGEN)
+#    find_package(Doxygen)
+#    if (DOXYGEN_FOUND)
+#        # add a Doxygen target to the "all" target
+#        add_custom_target(SQLiteCpp_doxygen
+#         ALL
+#         COMMAND doxygen Doxyfile > ${DEV_NULL}
+#         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+#        )
+#    endif (DOXYGEN_FOUND)
+#else (SQLITECPP_RUN_DOXYGEN)
+#    message(STATUS "SQLITECPP_RUN_DOXYGEN OFF")
+#endif (SQLITECPP_RUN_DOXYGEN)
+#
+#option(SQLITECPP_BUILD_EXAMPLES "Build examples." OFF)
+#if (SQLITECPP_BUILD_EXAMPLES)
+#    # add the basic example executable
+#    add_executable(SQLiteCpp_example1 ${SQLITECPP_EXAMPLES})
+#    target_link_libraries(SQLiteCpp_example1 SQLiteCpp sqlite3)
+#    # Link target with pthread and dl for linux
+#    if (UNIX)
+#        target_link_libraries(SQLiteCpp_example1 pthread)
+#        if (NOT APPLE)
+#            target_link_libraries(SQLiteCpp_example1 dl)
+#        endif ()
+#    elseif (MSYS OR MINGW)
+#        target_link_libraries(SQLiteCpp_example1 ssp)
+#    endif ()
+#else (SQLITECPP_BUILD_EXAMPLES)
+#    message(STATUS "SQLITECPP_BUILD_EXAMPLES OFF")
+#endif (SQLITECPP_BUILD_EXAMPLES)
+#
+#option(SQLITECPP_BUILD_TESTS "Build and run tests." OFF)
+#if (SQLITECPP_BUILD_TESTS)
+#    # deactivate some warnings for compiling the gtest library
+#    if (NOT MSVC)
+#        add_compile_options(-Wno-variadic-macros -Wno-long-long -Wno-switch-enum -Wno-float-equal -Wno-conversion-null -Wno-switch-default -Wno-pedantic)
+#    endif (NOT MSVC)
+#
+#    # add the subdirectory containing the CMakeLists.txt for the gtest library
+#    # TODO: under Linux, uses libgtest-dev if found
+#    # TODO: move to the new googletest Github repository
+#    if (NOT EXISTS "${PROJECT_SOURCE_DIR}/googletest/CMakeLists.txt")
+#        message(FATAL_ERROR "Missing 'googletest' submodule! Either use 'git init submodule' and 'git update submodule' to get googletest according to the README, or deactivate unit tests with -DSQLITECPP_BUILD_TESTS=OFF")
+#    endif ()
+#    add_subdirectory(googletest)
+#    include_directories("${PROJECT_SOURCE_DIR}/googletest/googletest/include")
+#
+#    # add the unit test executable
+#    add_executable(SQLiteCpp_tests ${SQLITECPP_TESTS})
+#    target_link_libraries(SQLiteCpp_tests gtest_main SQLiteCpp sqlite3)
+#    # Link target with dl for linux
+#    if (UNIX AND NOT APPLE)
+#        target_link_libraries(SQLiteCpp_tests dl)
+#    endif ()
+#
+#    # add a "test" target:
+#    enable_testing()
+#
+#    # does the tests pass?
+#    add_test(UnitTests SQLiteCpp_tests)
+#
+#    if (SQLITECPP_BUILD_EXAMPLES)
+#        # does the example1 runs successfully?
+#        add_test(Example1Run SQLiteCpp_example1)
+#    endif (SQLITECPP_BUILD_EXAMPLES)
+#else (SQLITECPP_BUILD_TESTS)
+#    message(STATUS "SQLITECPP_BUILD_TESTS OFF")
+#endif (SQLITECPP_BUILD_TESTS)
 
